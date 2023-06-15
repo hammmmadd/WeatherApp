@@ -1,37 +1,49 @@
-const API_KEY = `3265874a2c77ae4a04bb96236a642d2f`
-const form = document.querySelector("form")
-const search = document.querySelector("#search")
-const weather = document.querySelector("#weather")
-// const API = `https://api.openweathermap.org/data/2.5/weather?
-// q=${city}&appid=${API_KEY}&units=metric`
-// const IMG_URL = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png"`
-const getWeather = async (city) => {
-    weather.innerHTML = `<h2> Loading... <h2/>`
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`
-    const response = await fetch(url);
-    const data = await response.json()
-    return showWeather(data)
-}
-const showWeather = (data) => {
-    if(data.cod == "404") {
-        weather.innerHTML = `<h2> City Not Found <h2/>`
-        return; 
+document.getElementById('search').addEventListener('click', function(event) {
+    event.preventDefault(); // Prevent form submission
+    
+    const city = document.getElementById('cityInput').value;
+    if (city) {
+      getWeather(city);
     }
-    weather.innerHTML =
-        `<div>
-   <img src="https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png" alt="">
-</div>
-<div>
-   <h2>${data.main.temp} ℃</h2>
-   <h4> ${data.weather[0].main} </h4>
-</div>`
-}
-form.addEventListener(
-    "submit",
-    function (event) {
-        getWeather(search.value)
-        event.preventDefault();
-
-    }
-
-)
+  });
+  
+  function getWeather(city) {
+    const apiKey = '3265874a2c77ae4a04bb96236a642d2f';
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`;
+  
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        const weatherDiv = document.getElementById('weather');
+        weatherDiv.innerHTML = '';
+  
+        if (data.cod === '404') {
+          const errorMessage = document.createElement('p');
+          errorMessage.textContent = 'City not found.';
+          weatherDiv.appendChild(errorMessage);
+          return;
+        }
+  
+        const temperature = Math.round(data.main.temp - 273.15); // Convert from Kelvin to Celsius
+        const description = data.weather[0].description;
+  
+        const weatherIcon = document.createElement('img');
+        weatherIcon.src = `https://openweathermap.org/img/wn/${data.weather[0].icon}.png`;
+  
+        const temperatureElement = document.createElement('h2');
+        temperatureElement.textContent = temperature + ' ℃';
+  
+        const descriptionElement = document.createElement('h4');
+        descriptionElement.textContent = description;
+  
+        weatherDiv.appendChild(weatherIcon);
+        weatherDiv.appendChild(temperatureElement);
+        weatherDiv.appendChild(descriptionElement);
+      })
+      .catch(error => {
+        console.log('Error:', error);
+        const weatherDiv = document.getElementById('weather');
+        weatherDiv.innerHTML = '<p>An error occurred while fetching weather data.</p>';
+      });
+  }
+  

@@ -9,24 +9,21 @@
 </head>
 
 <body>
-    <main>
-        <div class="row" style="text-align: center;">
-            <form action="">
-                <input type="search" id="search" placeholder="Search City">
-            </form>
-        </div>
-        <div class="row" id="weather">
-            <!-- <div>
-                <img src="https://openweathermap.org/img/wn/04n@2x.png" alt="">
-            </div>
-            <div>
-                <h2>32 ℃</h2>
-                <h4>Clear</h4>
-            </div> -->
-        </div>
-    </main>
+    <div class="card">
+        <form id="weatherForm">
+            <input type="text" name="city" id="cityInput" class="input" placeholder="Enter city name">
+        </form>
 
-    <script src="script.js">  </script>
+        <div class="row" id="weather">
+            <!-- Weather data will be dynamically added here -->
+        </div>
+        <div>
+            <button class="btn" id="search">
+                Search
+            </button>
+        </div>
+    </div>
+    <script src="script.js"></script>
 </body>
 
 </html>
